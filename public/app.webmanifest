@@ -1,0 +1,27 @@
+{
+  "name": "Mage's Mind - BETA ",
+  "id": "br.com.eletromago",
+  "short_name": "Mage's Mind",
+  "start_url": "https://eletromago.com.br/mages-mind/",
+  "theme_color": "#1d232a",
+  "background_color": "#1d232a",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "description": "Organize sua notas com esse aplicativo de anotações simples e eficiente.",
+  "screenshots": [
+    {
+      "src": "s1.png",
+      "sizes": "1911x957",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ]
+}
