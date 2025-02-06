@@ -1,5 +1,5 @@
 export default function useUtils() {
-  function slugify(text) {
+  function slugify(text: string) {
     return text
       .toString()
       .toLowerCase()

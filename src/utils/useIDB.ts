@@ -1,13 +1,22 @@
 import { openDB } from 'idb'
 import { useItemsStore } from '@/stores/items'
 type AllowedTypeStrings = 'notes' | 'todo'
-type SubItem = {
-  name: string
+
+type Subitem = {
+  id: number
+  title: string
+  slug: string
+  content: string
   date: string
-  description: string
   tags: string[]
 }
 
+type Page = {
+  id: number
+  name: string
+  slug: string
+  subitems: Subitem[]
+}
 declare global {
   interface Window {
     idb: any
@@ -36,7 +45,7 @@ export default function useIDB() {
     await db.add(storeName, item)
   }
 
-  async function addSubItem(itemId: number, subItem: SubItem, storeName = 'pages') {
+  async function addSubItem(itemId: number, subItem: Subitem, storeName = 'pages') {
     let db = window.idb
     if (!db) db = await ODB('mages-db', storeName, 1, 'name')
     let item = await db.get(storeName, itemId)
@@ -97,7 +106,7 @@ export default function useIDB() {
   async function updateSubItem(
     itemId: number,
     subItemId: number,
-    subItem: SubItem,
+    subItem: Subitem,
     storeName = 'pages',
   ) {
     let db = window.idb
