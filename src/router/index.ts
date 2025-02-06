@@ -7,15 +7,15 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/:name?',
+      path: '/',
       component: HomeView,
       children: [
         {
-          path: 'notes',
+          path: '/notes/:slug/',
           component: NotesView,
         },
         {
-          path: 'todo',
+          path: '/todo/:slug',
           component: TodoView,
         },
       ],

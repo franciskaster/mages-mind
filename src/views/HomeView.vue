@@ -1,9 +1,5 @@
 <template>
   <main>
-    <header>
-      <Navbar />
-    </header>
-
     <nav>
       <Sidebar />
     </nav>
@@ -71,6 +67,8 @@
         </a>
       </nav>
     </footer> -->
+
+
   </main>
 </template>
 
@@ -91,7 +89,6 @@ onMounted(async () => {
   if (!navigator.storage || !navigator.storage.persist) return
   if (!await navigator.storage.persisted()) {
     const res = await navigator.storage.persist()
-    console.log('Persistance request: ', res)
   }
 })
 
@@ -101,7 +98,8 @@ onMounted(async () => {
 main {
   display: grid;
   grid-template-columns: 250px auto;
-  grid-template-rows: auto auto auto;
+  grid-template-rows: auto auto;
+  height: 100%;
 }
 
 main>header {
@@ -118,6 +116,7 @@ main>section {
   grid-row: 2/ 4;
   grid-column: 2 / 3;
   overflow: auto;
+
 }
 
 main>footer {
