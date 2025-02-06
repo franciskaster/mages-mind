@@ -26,25 +26,28 @@
         </div>
       </div>
 
-      <div class="content" @click="contentClicked">
-        <div v-for="subitem in subitems" :key="subitem.id" :data-id="subitem.id" :data-slug="subitem.slug" class="note">
-          <div class="actions">
-            <svg class="remove-note size-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-              stroke-width="1.5" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-            </svg>
+      <div class="content-holder">
+        <div class="content" @click="contentClicked">
+          <div v-for="subitem in subitems" :key="subitem.id" :data-id="subitem.id" :data-slug="subitem.slug"
+            class="note">
+            <div class="actions">
+              <svg class="remove-note size-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+              </svg>
 
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="currentColor" class="edit-note size-4">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-            </svg>
-          </div>
-          <h3>{{ subitem.title }}</h3>
-          <p class="content">{{ subitem.content }}</p>
-          <div class="note__footer">
-            <p>{{ subitem.date }}</p>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="edit-note size-4">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+              </svg>
+            </div>
+            <h3>{{ subitem.title }}</h3>
+            <p class="content">{{ subitem.content }}</p>
+            <div class="note__footer">
+              <p>{{ subitem.date }}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -144,11 +147,11 @@ function clearModal() {
 }
 
 function setModalContent(subitem: Subitem) {
-  const title = document.querySelector('input[name="title"]') as HTMLInputElement
-  const tags = document.querySelector('input[name="tags"]') as HTMLInputElement
-  const content = document.querySelector('textarea[name="content"]') as HTMLTextAreaElement
-  const button = document.querySelector('.modal-action button') as HTMLButtonElement
-  const parent = button.closest('.modal-box') as HTMLDivElement
+  const title = document.querySelector('#add_new_card input[name="title"]') as HTMLInputElement
+  const tags = document.querySelector('#add_new_card input[name="tags"]') as HTMLInputElement
+  const content = document.querySelector('#add_new_card textarea[name="content"]') as HTMLTextAreaElement
+  const button = document.querySelector('#add_new_card .modal-action button') as HTMLButtonElement
+  const parent = button.closest('#add_new_card .modal-box') as HTMLDivElement
   button.textContent = 'Editar'
   button.classList.add('edit')
   title.value = subitem.title
@@ -159,13 +162,16 @@ function setModalContent(subitem: Subitem) {
 
 async function addNewNote(event: Event) {
   const target = event.target as HTMLElement
-  const parent = target.closest('.modal-box') as HTMLDivElement
+  const parent = target.closest('#add_new_card .modal-box') as HTMLDivElement
   if (!parent) return
-  const title = parent.querySelector('input[name="title"]') as HTMLInputElement
-  const tags = parent.querySelector('input[name="tags"]') as HTMLInputElement
-  const content = parent.querySelector('textarea[name="content"]') as HTMLTextAreaElement
-  const button = parent.querySelector('.modal-action button') as HTMLButtonElement
-  if (!title.value || !content.value) return
+  const title = parent.querySelector('#add_new_card input[name="title"]') as HTMLInputElement
+  const tags = parent.querySelector('#add_new_card input[name="tags"]') as HTMLInputElement
+  const content = parent.querySelector('#add_new_card textarea[name="content"]') as HTMLTextAreaElement
+  const button = parent.querySelector('#add_new_card .modal-action button') as HTMLButtonElement
+  if (!title.value) {
+    event.preventDefault()
+    return
+  }
   const date = new Date()
   const month = String(date.getMonth() + 1).padStart(2, '0')
   const day = date.getDate()
@@ -283,14 +289,19 @@ onMounted(async () => {
   gap: 1rem;
 }
 
-.body>.content {
+.body>.content-holder {
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.body>.content-holder>.content {
   padding: 1rem;
   display: grid;
   width: 100%;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1rem;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden;
 }
 
 .note {
@@ -322,7 +333,7 @@ onMounted(async () => {
   right: 10px;
   bottom: 10px;
   display: none;
-  display: flex;
+  /* display: flex; */
 }
 
 .note:hover .actions {
