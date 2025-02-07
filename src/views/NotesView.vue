@@ -102,7 +102,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import useIDB from '@/utils/useIDB.ts'
 import useUtils from '@/utils/useUtils'
@@ -136,18 +136,11 @@ const pageObject = ref<Page | null>(null)
 const subitems = ref<Subitem[]>([])
 
 function addNewNoteModal() {
-  clearModal()
+  utils.clearAllModals()
   add_new_card.showModal()
 }
 
-function clearModal() {
-  const title = document.querySelector('input[name="title"]') as HTMLInputElement
-  const tags = document.querySelector('input[name="tags"]') as HTMLInputElement
-  const content = document.querySelector('textarea[name="content"]') as HTMLTextAreaElement
-  title.value = ''
-  tags.value = ''
-  content.value = ''
-}
+
 
 function setModalContent(subitem: Subitem) {
   const title = document.querySelector('#add_new_card input[name="title"]') as HTMLInputElement
@@ -182,6 +175,7 @@ async function addNewNote(event: Event) {
   const formattedDate = `${month}/${day}/${year}`
   const slug = utils.slugify(title.value)
   const tagsArray = tags.value.split(',')
+  const pageId = Number(pageObject.value?.id)
 
   const newSubitem = {
     title: title.value,
@@ -195,7 +189,7 @@ async function addNewNote(event: Event) {
   if (button.classList.contains('edit')) {
     const id = Number(parent.dataset.id)
     newSubitem.id = id
-    const updateSubItem = await idbUtils.updateSubItem(1, id, newSubitem)
+    const updateSubItem = await idbUtils.updateSubItem(pageId, id, newSubitem)
     subitems.value = subitems.value.map((item) => {
       if (item.id === updateSubItem.id) {
         return updateSubItem
@@ -207,7 +201,7 @@ async function addNewNote(event: Event) {
     return
   }
 
-  const addedSubItem = await idbUtils.addSubItem(1, newSubitem)
+  const addedSubItem = await idbUtils.addSubItem(pageId, newSubitem)
   subitems.value.push(addedSubItem)
 }
 
@@ -245,8 +239,23 @@ async function contentClicked(event: MouseEvent) {
 }
 
 
-itemsStore.$onAction(({
+async function renderPage(pageSlug?: string) {
+  add_new_card = document.getElementById('add_new_card') as HTMLDialogElement
+  confirm_delete_all_subitems = document.getElementById('confirm_delete_all_subitems') as HTMLDialogElement
+  pageSlug = pageSlug ? pageSlug : route.params.slug as string
+  const pages = await idbUtils.getPages()
+  const foundPage = pages.find((p: Page) => p.slug === pageSlug)
+  if (!foundPage) return
+  pageObject.value = foundPage
+  subitems.value = await idbUtils.getSubItems(foundPage.id)
+  // utils.clearAllModals()
+
+
+}
+
+itemsStore.$onAction(async ({
   name,
+  args,
   after,
 }) => {
   if (name === 'setItems') {
@@ -259,17 +268,14 @@ itemsStore.$onAction(({
 
     })
   }
+  if (name === 'changeCurrentPage') {
+    await renderPage(args[0])
+
+  }
 })
 
 onMounted(async () => {
-  add_new_card = document.getElementById('add_new_card') as HTMLDialogElement
-  confirm_delete_all_subitems = document.getElementById('confirm_delete_all_subitems') as HTMLDialogElement
-  const pageSlug = router.currentRoute.value.params.slug as string
-  const pages = await idbUtils.getPages()
-  const foundPage = pages.find((p: Page) => p.slug === pageSlug)
-  if (!foundPage) return
-  pageObject.value = foundPage
-  subitems.value = await idbUtils.getSubItems(foundPage.id)
+  await renderPage()
 })
 </script>
 

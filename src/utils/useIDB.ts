@@ -1,5 +1,6 @@
 import { openDB } from 'idb'
 import { useItemsStore } from '@/stores/items'
+import useUtils from './useUtils'
 type AllowedTypeStrings = 'notes' | 'todo'
 
 type Subitem = {
@@ -15,6 +16,7 @@ type Page = {
   id: number
   name: string
   slug: string
+  type: string
   subitems: Subitem[]
 }
 declare global {
@@ -56,6 +58,21 @@ export default function useIDB() {
     return newItem
   }
 
+  async function addPage(name: string, type: string, storeName = 'pages') {
+    let db
+    if (!db) db = await ODB('mages-db', storeName, 1, 'name')
+    const id = (await db.count(storeName)) + 1
+    const slug = useUtils().slugify(name)
+    // chechk if slug already exists
+    const res = await db.getAll(storeName)
+    const exists = res.some((item: { slug: string }) => item.slug === slug)
+    if (exists) {
+      return false
+    }
+    await db.add(storeName, { id, name, slug, type, subitems: [] })
+    return { id, name, slug, type, subitems: [] }
+  }
+
   async function getSubItems(itemId: number, storeName = 'pages') {
     let db = window.idb
     if (!db) db = await ODB('mages-db', storeName, 1, 'name')
@@ -64,7 +81,7 @@ export default function useIDB() {
   }
 
   async function getPages(storeName = 'pages') {
-    let db = window.idb
+    let db
     if (!db) db = await ODB('mages-db', storeName, 1, 'name')
     const res = await db.getAll(storeName)
     useItemsStore().setItems(res)
@@ -155,5 +172,6 @@ export default function useIDB() {
     updateItem,
     updateSubItem,
     updatePageName,
+    addPage,
   }
 }

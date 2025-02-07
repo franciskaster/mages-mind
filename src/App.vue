@@ -42,6 +42,7 @@ li {
 }
 
 .modal-content .textarea,
+.modal-content .select,
 .modal-content .input {
   width: 100%;
   max-width: unset;

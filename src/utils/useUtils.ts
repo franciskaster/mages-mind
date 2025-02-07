@@ -9,5 +9,18 @@ export default function useUtils() {
       .replace(/^-+/, '') // Trim - from start of text
       .replace(/-+$/, '') // Trim - from end of text
   }
-  return { slugify }
+
+  function clearAllModals() {
+    document.querySelectorAll('input').forEach((input) => {
+      input.value = ''
+    })
+    document.querySelectorAll('textarea').forEach((textarea) => {
+      textarea.value = ''
+    })
+    document.querySelectorAll('select').forEach((select) => {
+      select.value = ''
+    })
+  }
+
+  return { slugify, clearAllModals }
 }

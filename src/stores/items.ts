@@ -3,8 +3,7 @@ import { defineStore } from 'pinia'
 
 export const useItemsStore = defineStore('items', () => {
   const items = ref<Array<any>>([])
-  const currentPage = ref([])
-
+  const currentPage = ref('')
   function setItems(newItems: any) {
     items.value = newItems
   }
@@ -13,5 +12,9 @@ export const useItemsStore = defineStore('items', () => {
     currentPage.value = newItems
   }
 
-  return { items, setItems, setCurrentPage }
+  function changeCurrentPage(slug: string) {
+    currentPage.value = slug
+  }
+
+  return { items, setItems, setCurrentPage, changeCurrentPage }
 })
