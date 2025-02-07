@@ -172,7 +172,7 @@ async function addNewNote(event: Event) {
   const month = String(date.getMonth() + 1).padStart(2, '0')
   const day = date.getDate()
   const year = date.getFullYear()
-  const formattedDate = `${month}/${day}/${year}`
+  const formattedDate = `${String(day).padStart(2, '0')}/${month}/${year}`
   const slug = utils.slugify(title.value)
   const tagsArray = tags.value.split(',')
   const pageId = Number(pageObject.value?.id)
