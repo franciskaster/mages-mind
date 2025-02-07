@@ -71,6 +71,14 @@ export default function useIDB() {
     return res
   }
 
+  async function getPage(slug: string, storeName = 'pages') {
+    let db = window.idb
+    if (!db) db = await ODB('mages-db', storeName, 1, 'name')
+    const res = await db.getAllFromIndex(storeName, 'name', slug)
+    useItemsStore().setCurrentPage(res)
+    return res
+  }
+
   async function deleteItem(id: number, storeName = 'pages') {
     let db = window.idb
     if (!db) db = await ODB('mages-db', storeName, 1, 'name')
@@ -90,6 +98,14 @@ export default function useIDB() {
     if (!db) db = await ODB('mages-db', storeName, 1, 'name')
     let item = await db.get(storeName, itemId)
     item.subitems = []
+    await db.put(storeName, item)
+  }
+
+  async function updatePageName(id: number, name: string, storeName = 'pages') {
+    let db = window.idb
+    if (!db) db = await ODB('mages-db', storeName, 1, 'name')
+    let item = await db.get(storeName, id)
+    item.name = name
     await db.put(storeName, item)
   }
 
@@ -130,6 +146,7 @@ export default function useIDB() {
     addItem,
     addSubItem,
     getPages,
+    getPage,
     getSubItems,
     getItemById,
     deleteItem,
@@ -137,5 +154,6 @@ export default function useIDB() {
     deleteSubItem,
     updateItem,
     updateSubItem,
+    updatePageName,
   }
 }

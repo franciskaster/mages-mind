@@ -103,9 +103,10 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import useIDB from '@/utils/useIDB.ts'
 import useUtils from '@/utils/useUtils'
+import { useItemsStore } from '@/stores/items'
 
 type Subitem = {
   id: number
@@ -126,6 +127,8 @@ type Page = {
 let add_new_card: HTMLDialogElement
 let confirm_delete_all_subitems: HTMLDialogElement
 
+const route = useRoute()
+const itemsStore = useItemsStore()
 const utils = useUtils()
 const router = useRouter()
 const idbUtils = useIDB()
@@ -152,7 +155,7 @@ function setModalContent(subitem: Subitem) {
   const content = document.querySelector('#add_new_card textarea[name="content"]') as HTMLTextAreaElement
   const button = document.querySelector('#add_new_card .modal-action button') as HTMLButtonElement
   const parent = button.closest('#add_new_card .modal-box') as HTMLDivElement
-  button.textContent = 'Editar'
+  button.textContent = 'Salvar'
   button.classList.add('edit')
   title.value = subitem.title
   tags.value = subitem.tags.join(',')
@@ -240,6 +243,23 @@ async function contentClicked(event: MouseEvent) {
     add_new_card.showModal()
   }
 }
+
+
+itemsStore.$onAction(({
+  name,
+  after,
+}) => {
+  if (name === 'setItems') {
+    after(() => {
+      const pageSlug = route.params.slug as string
+      const pages = itemsStore.items
+      const foundPage = pages.find((p: Page) => p.slug === pageSlug)
+      if (!foundPage) return
+      pageObject.value = foundPage
+
+    })
+  }
+})
 
 onMounted(async () => {
   add_new_card = document.getElementById('add_new_card') as HTMLDialogElement
@@ -387,26 +407,5 @@ onMounted(async () => {
   align-items: center;
   font-size: 0.8rem;
   height: fit-content;
-}
-
-.modal-content {
-  height: 100%;
-  padding: 1rem 0 1rem 0;
-}
-
-.modal-content .label:not(:first-child) {
-  margin-top: 1rem;
-}
-
-.modal-content .textarea,
-.modal-content .input {
-  width: 100%;
-  max-width: unset;
-  scrollbar-width: thin;
-  resize: none;
-}
-
-.modal-action {
-  margin-top: 0;
 }
 </style>

@@ -30,4 +30,26 @@ li {
   justify-content: center;
   align-items: center;
 }
+
+
+.modal-content {
+  height: 100%;
+  padding: 1rem 0 1rem 0;
+}
+
+.modal-content .label:not(:first-child) {
+  margin-top: 1rem;
+}
+
+.modal-content .textarea,
+.modal-content .input {
+  width: 100%;
+  max-width: unset;
+  scrollbar-width: thin;
+  resize: none;
+}
+
+.modal-action {
+  margin-top: 0;
+}
 </style>

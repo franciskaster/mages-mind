@@ -69,21 +69,26 @@
     </footer> -->
 
 
+
   </main>
 </template>
 
-<script setup>
-import { RouterView } from 'vue-router'
+<script setup lang="ts">
+import { RouterView, useRoute } from 'vue-router'
 import Navbar from '@/components/Navbar.vue'
 import Sidebar from '@/components/Sidebar.vue'
 import useIDB from '@/utils/useIDB.ts'
 import { onMounted } from 'vue'
+import { useItemsStore } from '@/stores/items'
 
+const itemsStore = useItemsStore()
+const route = useRoute()
 const idbUtils = useIDB()
 idbUtils.ODB('mages-db', 'pages', 1, 'name').then(async (res) => {
   window.idb = res
-  // todo mover para a store
 })
+
+
 
 onMounted(async () => {
   if (!navigator.storage || !navigator.storage.persist) return

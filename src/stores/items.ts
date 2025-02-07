@@ -9,5 +9,9 @@ export const useItemsStore = defineStore('items', () => {
     items.value = newItems
   }
 
-  return { items, setItems }
+  function setCurrentPage(newItems: any) {
+    currentPage.value = newItems
+  }
+
+  return { items, setItems, setCurrentPage }
 })
